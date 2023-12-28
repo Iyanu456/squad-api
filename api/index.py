@@ -58,8 +58,8 @@ def index():
 
             # Make a POST request to the endpoint
             user_data = {
-                "display_name": str(first_name + last_name),
-                "account_name": str(first_name + middle_name + last_name),
+                "display_name": str(f"{first_name} {last_name}"),
+                "account_name": str(f"{first_name} {middle_name} {last_name}"),
                 "account_number": str("2559628746"),
                 "bank_code": str("058"),
                 "bank": str("GTBank"),
