@@ -1,12 +1,13 @@
-from mongoengine import connect
-
-from mongoengine import Document, StringField, EmailField
+from mongoengine import Document, StringField, EmailField, connect
 
 class User(Document):
     """
     MongoDB Document Model for User
     """
-    username = StringField(required=True, unique=True)
+    username = StringField(unique=True)
+    first_name = StringField(required=True)
+    last_name = StringField(required=True)
+    middle_name = StringField()
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
 

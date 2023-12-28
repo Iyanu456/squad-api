@@ -14,7 +14,10 @@ csrf = CSRFProtect(app)
 
 # Define the WTForms form
 class UserForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username')
+    first_name = StringField('First name', validators=[DataRequired()])
+    last_name = StringField('Last name', validators=[DataRequired()])
+    middle_name = StringField('Middle name')
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -26,8 +29,16 @@ def index():
 
     if form.validate_on_submit():
         try:
+            # Get infrmation from form
+            username=form.username.data
+            first_name=form.first_name.data
+            last_name=form.last_name.data
+            middle_name=form.middle_name.data
+            email=form.email.data
+            password=form.password.data
+
             # Save the form data to the database
-            new_user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+            new_user = User(username=username, first_name=first_name, last_name=last_name, middle_name=middle_name, email=email, password=password,)
             new_user.save()
             return redirect(url_for('success'))
         except NotUniqueError as e:
