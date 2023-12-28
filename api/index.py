@@ -16,7 +16,7 @@ csrf = CSRFProtect(app)
 # Function to make a POST request to the endpoint
 def make_post_request(endpoint, user_data):
 
-    authorization_token = "sandbox_pk_25c04c9060872f1e36b8310d615e87da36aa3c51055f"
+    authorization_token = "sandbox_sk_25c04c9060872f1e36b823021c2984a32cbf29596d58"
 
     headers = {
         "Authorization": f"Bearer {authorization_token}",
@@ -58,8 +58,11 @@ def index():
 
             # Make a POST request to the endpoint
             user_data = {
-                "display_name": first_name + last_name,
-                "account_name": first_name + middle_name + last_name,
+                "display_name": str(first_name + last_name),
+                "account_name": str(first_name + middle_name + last_name),
+                "account_number": str("2559628746"),
+                "bank_code": str("058"),
+                "bank": str("GTBank"),
             }
 
             print(user_data)
