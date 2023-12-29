@@ -1,4 +1,5 @@
 from mongoengine import Document, StringField, EmailField, DateTimeField, BooleanField, connect
+from datetime import datetime
 import uuid
 
 class User(Document):
@@ -16,6 +17,9 @@ class User(Document):
     address = StringField()
     is_verified = BooleanField(default=False)
     phone_number = StringField()
+    role = StringField(required=True)
+    created_at = DateTimeField(default=datetime.utcnow, required=True)
+    updated_at = DateTimeField(default=datetime.utcnow)
 
     meta = {'collection': 'users'}
 
@@ -82,17 +86,25 @@ class StorageEngine:
 
         return user.user_id if user else None
 
-if __name__ == "__main__":
-    # Assuming User is already defined as shown in the previous examples
+    def get_user_details(self, email):
+        user = User.objects(email=email).first()
 
-    # Create a StorageEngine instance and connect to the database
-    storage_engine = StorageEngine(db_name='your_database', host='your_mongo_host', port=your_mongo_port)
+        if user:
+            details = {
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "user_id": user.user_id,
+                "dob": user.dob,
+                "gender": user.gender,
+                "address": user.address,
+                "phone_number": user.phone_number,
+                "is_verified": user.is_verified,
+                "role": user.role
+                # Add other fields as needed
+            }
 
-    # Save a new user
-    storage_engine.save_user(username='john_doe', email='john@example.com', password='hashed_password')
-
-    # Find a user by email
-    storage_engine.find_user(email='john@example.com')
-
-    # Delete a user
-    storage_engine.delete_user(username='john_doe')
+            return details
+        
+        else:
+            return None
