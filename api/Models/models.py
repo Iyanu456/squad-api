@@ -1,17 +1,35 @@
-from mongoengine import Document, StringField, EmailField, connect
+from mongoengine import Document, StringField, EmailField, DateTimeField, BooleanField, connect
+import uuid
 
 class User(Document):
     """
     MongoDB Document Model for User
     """
+    user_id = StringField(required=True, unique=True)
     username = StringField(unique=True)
     first_name = StringField(required=True)
     last_name = StringField(required=True)
-    middle_name = StringField()
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
+    dob = DateTimeField()  # Date of Birth
+    gender = StringField()
+    address = StringField()
+    is_verified = BooleanField(default=False)
+    phone_number = StringField()
 
     meta = {'collection': 'users'}
+
+    def generate_user_id(self):
+        """
+        Generate a unique user ID.
+        """
+        self.user_id = str(uuid.uuid4())
+
+    def save(self, *args, **kwargs):
+        # Generate a unique user ID before saving the user
+        if not self.user_id:
+            self.generate_user_id()
+        super(User, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"User(username={self.username}, email={self.email})"
@@ -49,6 +67,20 @@ class StorageEngine:
             print(f"User found: {user}")
         else:
             print(f"User with email {email} not found.")
+
+    @staticmethod
+    def get_user_id(username=None, email=None):
+        """
+        Get user_id based on username or email.
+        """
+        if username:
+            user = User.objects(username=username).first()
+        elif email:
+            user = User.objects(email=email).first()
+        else:
+            return None  # If neither username nor email is provided
+
+        return user.user_id if user else None
 
 if __name__ == "__main__":
     # Assuming User is already defined as shown in the previous examples
