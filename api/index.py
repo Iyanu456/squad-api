@@ -89,10 +89,12 @@ def verify_user():
             user.phone_number = data.get('phone_number')  # New field
             user.is_verified = True  # Mark the user as verified
             gender = data.get('gender')
-            if gender == "male":
-                user.gender = "1"
-            else:
-                user.gender = "2"
+            if gender:
+                if gender == "male":
+                    user.gender = "1"
+                else:
+                    user.gender = "2"
+                    
             user.save()
 
             # Return a JSON response
