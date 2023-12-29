@@ -13,6 +13,15 @@ app.config['SECRET_KEY'] = 'your_secret_key_here'
 storage_engine = StorageEngine('squidDB', 'localhost', 27017)
 
 
+urls = {
+    "create_merchant": "https://sandbox-api-d.squadco.com/merchant/create-sub-users",
+    "create_virtual_acct": "https://sandbox-api-d.squadco.com/virtual-account",
+    "payments": "https://sandbox-api-d.squadco.com/transaction/initiate",
+    "transfer": "https://sandbox-api-d.squadco.com/payout/account/lookup",
+    "wallet_balance": "https://sandbox-api-d.squadco.com/merchant/balance"
+}
+
+
 # Function to make a POST request to the endpoint
 def make_post_request(endpoint, user_data):
 
