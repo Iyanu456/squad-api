@@ -1,5 +1,6 @@
 from flask import json
 from Crypto.Cipher import AES
+import requests
 from base64 import b64encode, b64decode
 
 # Function to make a POST request to the endpoint
@@ -22,29 +23,29 @@ def check_password(password, secretKey, encrypted_password):
     decrypted_password = cipher.decrypt(ciphertext).decode('utf-8')
     return decrypted_password == password
 
-def create_virtual_account(user, role="basic"):
+def create_virtual_account(user, urls, role="basic"):
     try:
 
         if role == "basic":
+           
+           data = {
+                #"customer_identifier": user.get('user_id'),
+                "first_name": user.get('first_name'),
+                "last_name": user.get('last_name'),
+                "mobile_num": user.get('mobile_num'),
+                "email": user.get('email'),
+                "bvn": user.get('bvn_no'),
+                #"dob": user.get('dob'),
+                "address": user.get('address'),
+                "gender": user.get('gender'),
+            }
+        elif role == "merchant":
             data = {
-                "customer_identifier": user[user_id],
-                "first_name": user[first_name],
-                "last_name": user[last_name],
-                "mobile_num": user[phone_number],
-                "email": user[email],
-                "bvn": user[bvn_no],
-                "dob": user[dob],
-                "address": user[address],
-                "gender": user[gender],
-                }
-            
-        if role == "merchant":
-            data = {
-                "customer_identifier": user[user_id],
-                "business_name": user[business_name],
-                "mobile_num": user[phone_number],
-                "bvn": user[bvn_no],
-                }
+                #"customer_identifier": user.get('user_id'),
+                "business_name": user.get('business_name'),
+                "mobile_num": user.get('mobile_num'),
+                "bvn": user.get('bvn_no'),
+            }
 
         
         response_data = make_post_request(urls["virtual_acct_url"], data)
@@ -54,7 +55,7 @@ def create_virtual_account(user, role="basic"):
 
         # Handle other exceptions
         response_data = {
-            "error": f"An error occurred: {e}",
+            "error": f"(Api) - An error occurred: {e}",
             "message": "Operation failed",
             "status": 500,
             }

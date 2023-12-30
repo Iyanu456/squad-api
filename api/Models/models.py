@@ -12,7 +12,7 @@ class User(Document):
     last_name = StringField(required=True)
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
-    dob = DateTimeField()  # Date of Birth
+    #dob = DateTimeField()  # Date of Birth
     gender = StringField()
     address = StringField()
     is_verified = BooleanField(default=False)
@@ -20,7 +20,7 @@ class User(Document):
     role = StringField(required=True)
     created_at = DateTimeField(default=datetime.utcnow, required=True)
     updated_at = DateTimeField(default=datetime.utcnow)
-    bvn_no = StringField(required=True, unique=True)
+    bvn_no = StringField(unique=True)
 
     meta = {'collection': 'users'}
 

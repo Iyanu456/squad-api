@@ -91,7 +91,7 @@ def verify_user():
             user.address = data.get('address')
             user.phone_number = data.get('phone_number')  # New field
             user.is_verified = True  # Mark the user as verified
-            user.bvn_no = bcrypt.hashpw(data.get('bvn_no').encode('utf-8'), bcrypt.gensalt()),
+            
             gender = data.get('gender')
             if gender:
                 if gender == "male":
@@ -106,29 +106,29 @@ def verify_user():
 
             if user.role == "basic" and user.is_verified == True:
                 data = {
-                    "user_id": str(user.user_id),
-                    "first_name": f"Iyanuoluwa-{str(user.first_name)}",
-                    "last_name": str(user.last_name),
-                    "mobile_num": str(user.phone_number),
-                    "email": str(user.email),
-                    "bvn_no": str(data.get('bvn_no')),
+                    #"user_id": str(user.user_id),
+                    #"first_name": f"Iyanuoluwa-{user.first_name}",
+                    "last_name": user.last_name,
+                    "mobile_num": user.phone_number,
+                    "email": user.email,
+                    "bvn_no": f"{data.get('bvn_no')}",
                     "dob": user.dob,
-                    "address": str(user.address),
-                    "gender": str(user.gender),
+                    "address": user.address,
+                    "gender": user.gender,
                     }
                 
-                response_data = create_virtual_account(data, user.role)
+                response_data = create_virtual_account(data, urls, user.role)
                 return response_data
                 
             if user.role == "merchant" and user.is_verified == True:
                 data = {
-                    "user_id": str(user.user_id),
-                    "business_name": f"Iyanuoluwa- {str(user.business_name)}",
-                    "mobile_num": str(user.phone_number),
-                    "bvn_no": str(user.bvn_no),
+                    #"user_id": str(user.user_id),
+                    #"business_name": f"Iyanuoluwa- {user.business_name}",
+                    "mobile_num": user.phone_number,
+                    #"bvn_no": f"{data.get('bvn_no')}",
                     }
                 
-                response_data = create_virtual_account(data, user.role)
+                response_data = create_virtual_account(data, urls, user.role)
                 return response_data
         
         else:
@@ -142,6 +142,7 @@ def verify_user():
             "message": "Operation failed",
             "status": 500,
             }
+        print(e)
         return jsonify(response_data), 500
     
 
