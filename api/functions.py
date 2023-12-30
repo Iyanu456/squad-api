@@ -1,4 +1,4 @@
-from flask import json
+from flask import json, jsonify
 from Crypto.Cipher import AES
 import requests
 from base64 import b64encode, b64decode
@@ -13,7 +13,7 @@ def make_post_request(endpoint, user_data):
     }
 
     response = requests.post(endpoint, json=user_data, headers=headers)
-    return response
+    return response.json()
 
 def check_password(password, secretKey, encrypted_password):
     cipher = AES.new(secretKey.encode('utf-8'), AES.MODE_EAX)
@@ -29,19 +29,19 @@ def create_virtual_account(user, urls, role="basic"):
         if role == "basic":
            
            data = {
-                #"customer_identifier": user.get('user_id'),
+                "customer_identifier": user.get('user_id'),
                 "first_name": user.get('first_name'),
                 "last_name": user.get('last_name'),
                 "mobile_num": user.get('mobile_num'),
                 "email": user.get('email'),
                 "bvn": user.get('bvn_no'),
-                #"dob": user.get('dob'),
+                "dob": user.get('dob'),
                 "address": user.get('address'),
                 "gender": user.get('gender'),
             }
         elif role == "merchant":
             data = {
-                #"customer_identifier": user.get('user_id'),
+                "customer_identifier": user.get('user_id'),
                 "business_name": user.get('business_name'),
                 "mobile_num": user.get('mobile_num'),
                 "bvn": user.get('bvn_no'),
@@ -49,7 +49,7 @@ def create_virtual_account(user, urls, role="basic"):
 
         
         response_data = make_post_request(urls["virtual_acct_url"], data)
-        return (response_data), 200
+        return jsonify(response_data), 200
 
     except Exception as e:
 
@@ -59,4 +59,4 @@ def create_virtual_account(user, urls, role="basic"):
             "message": "Operation failed",
             "status": 500,
             }
-        return (response_data), 500
+        return jsonify(response_data), 500

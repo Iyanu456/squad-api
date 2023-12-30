@@ -84,13 +84,17 @@ def verify_user():
 
         # Retrieve the user by user_id
         user = User.objects(email=data.get('email')).first()
+        dob_str = data.get('dob')
+        dob = datetime.strptime(dob_str, '%d/%m/%Y')  # Assuming dd/mm/yyyy format
+        bvn = data.get('bvn_no')
 
         if user:
             # Update the user with additional details
-            user.dob = data.get('dob')
+            user.dob = dob
             user.address = data.get('address')
             user.phone_number = data.get('phone_number')  # New field
             user.is_verified = True  # Mark the user as verified
+            user.bvn_no = str(bcrypt.hashpw(bvn.encode('utf-8'), bcrypt.gensalt()))
             
             gender = data.get('gender')
             if gender:
@@ -106,13 +110,13 @@ def verify_user():
 
             if user.role == "basic" and user.is_verified == True:
                 data = {
-                    #"user_id": str(user.user_id),
-                    #"first_name": f"Iyanuoluwa-{user.first_name}",
+                    "user_id": str(user.user_id),
+                    "first_name": f"Iyanuoluwa-{user.first_name}",
                     "last_name": user.last_name,
                     "mobile_num": user.phone_number,
                     "email": user.email,
-                    "bvn_no": f"{data.get('bvn_no')}",
-                    "dob": user.dob,
+                    "bvn_no": f"{str(data.get('bvn_no'))}",
+                    "dob": user.dob.strftime('%d/%m/%Y'),
                     "address": user.address,
                     "gender": user.gender,
                     }
@@ -122,10 +126,10 @@ def verify_user():
                 
             if user.role == "merchant" and user.is_verified == True:
                 data = {
-                    #"user_id": str(user.user_id),
-                    #"business_name": f"Iyanuoluwa- {user.business_name}",
+                    "user_id": str(user.user_id),
+                    "business_name": f"Iyanuoluwa- {user.business_name}",
                     "mobile_num": user.phone_number,
-                    #"bvn_no": f"{data.get('bvn_no')}",
+                    "bvn_no": f"{str(data.get('bvn_no'))}",
                     }
                 
                 response_data = create_virtual_account(data, urls, user.role)
