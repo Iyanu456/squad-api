@@ -91,7 +91,7 @@ def verify_user():
             user.address = data.get('address')
             user.phone_number = data.get('phone_number')  # New field
             user.is_verified = True  # Mark the user as verified
-            user.bvn_no = str(bcrypt.hashpw(data.get('bvn_no').encode('utf-8'), bcrypt.gensalt())),
+            user.bvn_no = bcrypt.hashpw(data.get('bvn_no').encode('utf-8'), bcrypt.gensalt()),
             gender = data.get('gender')
             if gender:
                 if gender == "male":
@@ -111,7 +111,7 @@ def verify_user():
                     "last_name": str(user.last_name),
                     "mobile_num": str(user.phone_number),
                     "email": str(user.email),
-                    "bvn": str(data.get('bvn_no')),
+                    "bvn_no": str(data.get('bvn_no')),
                     "dob": user.dob,
                     "address": str(user.address),
                     "gender": str(user.gender),
@@ -125,7 +125,7 @@ def verify_user():
                     "user_id": str(user.user_id),
                     "business_name": f"Iyanuoluwa- {str(user.business_name)}",
                     "mobile_num": str(user.phone_number),
-                    "bvn": str(user.bvn_no),
+                    "bvn_no": str(user.bvn_no),
                     }
                 
                 response_data = create_virtual_account(data, user.role)
