@@ -20,6 +20,7 @@ class User(Document):
     role = StringField(required=True)
     created_at = DateTimeField(default=datetime.utcnow, required=True)
     updated_at = DateTimeField(default=datetime.utcnow)
+    bvn_no = StringField(required=True, unique=True)
 
     meta = {'collection': 'users'}
 
@@ -73,7 +74,7 @@ class StorageEngine:
             print(f"User with email {email} not found.")
 
     @staticmethod
-    def get_user_id(username=None, email=None):
+    def get_user_id(email=None, username=None):
         """
         Get user_id based on username or email.
         """

@@ -1,3 +1,7 @@
+from flask import json
+from Crypto.Cipher import AES
+from base64 import b64encode, b64decode
+
 # Function to make a POST request to the endpoint
 def make_post_request(endpoint, user_data):
 
@@ -9,6 +13,14 @@ def make_post_request(endpoint, user_data):
 
     response = requests.post(endpoint, json=user_data, headers=headers)
     return response
+
+def check_password(password, secretKey, encrypted_password):
+    cipher = AES.new(secretKey.encode('utf-8'), AES.MODE_EAX)
+    nonce = b64decode(encrypted_password["nonce"])
+    ciphertext = b64decode(encrypted_password["ciphertext"])
+    cipher.set_nonce(nonce)
+    decrypted_password = cipher.decrypt(ciphertext).decode('utf-8')
+    return decrypted_password == password
 
 def create_virtual_account(user, role="basic"):
     try:
@@ -36,7 +48,7 @@ def create_virtual_account(user, role="basic"):
 
         
         response_data = make_post_request(urls["virtual_acct_url"], data)
-        return jsonify(response_data.json()), 200
+        return (response_data), 200
 
     except Exception as e:
 
@@ -46,4 +58,4 @@ def create_virtual_account(user, role="basic"):
             "message": "Operation failed",
             "status": 500,
             }
-        return jsonify(response_data), 500
+        return (response_data), 500

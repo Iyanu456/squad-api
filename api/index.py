@@ -8,6 +8,7 @@ from Models.models import User, StorageEngine
 from functions import make_post_request, create_virtual_account
 import requests
 from datetime import datetime, date
+import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -39,9 +40,8 @@ def create_user():
             new_user = User(
                 first_name=data.get('first_name'),
                 last_name=data.get('last_name'),
-                username=data.get('username'),
                 email=data.get('email'),
-                password=data.get('password'),
+                password = bcrypt.hashpw(data.get('password').encode('utf-8'), bcrypt.gensalt()),
                 phone_number=data.get('phone_number'),
                 role=data.get('role')
             )
@@ -63,6 +63,14 @@ def create_user():
             "status": 500,
             }
         return jsonify(response_data), 500
+    
+    except Exception as e:
+        # Handle other exceptions
+        response_data = {
+            "error": f"An error occurred: {e}",
+            "message": "Operation failed",
+            "status": 500,}
+        return jsonify(response_data), 500
 
 
 
@@ -83,7 +91,7 @@ def verify_user():
             user.address = data.get('address')
             user.phone_number = data.get('phone_number')  # New field
             user.is_verified = True  # Mark the user as verified
-            user.role = data.get('role')  # New field
+            user.bvn_no = str(bcrypt.hashpw(data.get('bvn_no').encode('utf-8'), bcrypt.gensalt())),
             gender = data.get('gender')
             if gender:
                 if gender == "male":
@@ -91,42 +99,49 @@ def verify_user():
                 else:
                     user.gender = "2"
 
+            if data.get('username'):
+                user.username = data.get('username')
+
             user.save()
 
             if user.role == "basic" and user.is_verified == True:
                 data = {
-                    "customer_identifier": str(user.user_id),
+                    "user_id": str(user.user_id),
                     "first_name": f"Iyanuoluwa-{str(user.first_name)}",
                     "last_name": str(user.last_name),
                     "mobile_num": str(user.phone_number),
                     "email": str(user.email),
-                    "bvn": str(user.bvn_no),
+                    "bvn": str(data.get('bvn_no')),
                     "dob": user.dob,
                     "address": str(user.address),
                     "gender": str(user.gender),
                     }
                 
                 response_data = create_virtual_account(data, user.role)
-                return jsonify(response_data.json()), 200
+                return response_data
                 
             if user.role == "merchant" and user.is_verified == True:
                 data = {
-                    "customer_identifier": str(user.user_id),
+                    "user_id": str(user.user_id),
                     "business_name": f"Iyanuoluwa- {str(user.business_name)}",
                     "mobile_num": str(user.phone_number),
                     "bvn": str(user.bvn_no),
                     }
                 
                 response_data = create_virtual_account(data, user.role)
-                return jsonify(response_data.json()), 200
+                return response_data
         
         else:
             response_data = {"error": "User not found"}
-            return jsonify(response_data), 404
+            return (response_data), 404
         
     except Exception as e:
         # Handle other exceptions
-        response_data = {"error": f"An error occurred: {e}"}
+        response_data = {
+            "error": f"An error occurred: {e}",
+            "message": "Operation failed",
+            "status": 500,
+            }
         return jsonify(response_data), 500
     
 
