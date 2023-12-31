@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, j
 #from flask_wtf.csrf import CSRFProtect
 from mongoengine import NotUniqueError
 from Models.models import User, StorageEngine
-from functions import make_post_request, create_virtual_account
+from functions import make_post_request, make_get_request, create_virtual_account
 import requests
 from datetime import datetime, date
 import bcrypt
@@ -20,7 +20,8 @@ urls = {
     "virtual_acct_url": "https://sandbox-api-d.squadco.com/virtual-account",
     "payments_url": "https://sandbox-api-d.squadco.com/transaction/initiate",
     "transfer_url": "https://sandbox-api-d.squadco.com/payout/account/lookup",
-    "wallet_url": "https://sandbox-api-d.squadco.com/merchant/balance"
+    "wallet_url": "https://sandbox-api-d.squadco.com/merchant/balance",
+    "virtual_acct_details_url": "https://sandbox-api-d.squadco.com/virtual-account/"
 }
 
 
@@ -148,6 +149,19 @@ def verify_user():
             }
         print(e)
         return jsonify(response_data), 500
+
+
+@app.route('/api/user/details', methods=['POST'])
+def retrieve_user_detail():
+    data = request.json
+    user_id = data.get('user_id')
+    try:
+        response = make_get_request(urls['virtual_acct_details_url'] + user_id )
+        return response
+
+    except Exception as e:
+        return response
+
     
 
 if __name__ == "__main__":
