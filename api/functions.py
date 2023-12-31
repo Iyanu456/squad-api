@@ -49,7 +49,7 @@ def create_virtual_account(user, urls, role="basic"):
 
         
         response_data = make_post_request(urls["virtual_acct_url"], data)
-        return jsonify(response_data), 200
+        return jsonify(response_data), response_data.get('status')
 
     except Exception as e:
 
