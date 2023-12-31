@@ -19,9 +19,10 @@ urls = {
     "merchant_url": "https://sandbox-api-d.squadco.com/merchant/create-sub-users",
     "virtual_acct_url": "https://sandbox-api-d.squadco.com/virtual-account",
     "payments_url": "https://sandbox-api-d.squadco.com/transaction/initiate",
-    "transfer_url": "https://sandbox-api-d.squadco.com/payout/account/lookup",
+    "acct_lookup_url": "https://sandbox-api-d.squadco.com/payout/account/lookup",
     "wallet_url": "https://sandbox-api-d.squadco.com/merchant/balance",
-    "virtual_acct_details_url": "https://sandbox-api-d.squadco.com/virtual-account/"
+    "virtual_acct_details_url": "https://sandbox-api-d.squadco.com/virtual-account/",
+    "get_balance_url": "https://sandbox-api-d.squadco.com/merchant/balance"
 }
 
 
@@ -162,7 +163,35 @@ def retrieve_user_detail():
     except Exception as e:
         return response
 
+
+@app.route('/api/user/balance', methods=['POST'])
+def retrieve_user_balance():
+    #data = request.json
+    params = {"currency_id": "NGN"}
+
+    try:
+        response = make_get_request(urls['get_balance_url'], params)
+        return response
+
+    except Exception as e:
+        return response
+
+@app.route('/api/user/make-transfer', methods=['POST'])
+def make_transfer():
+    data = request.json
+    bank = data.get('bank'),
     
+    user_data = {
+        "bank_code": data.get('bank_code'),
+        "account_number": data.get('account_number'),
+    }
+
+    try:
+        response = make_post_request(urls['acct_lookup_url'], user_data)
+        return response
+
+    except Exception as e:
+        return response
 
 if __name__ == "__main__":
     # Enable debug mode
