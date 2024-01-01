@@ -9,6 +9,8 @@ from functions import make_post_request, make_get_request, create_virtual_accoun
 import requests
 from datetime import datetime, date
 import bcrypt
+import json
+import aiofiles
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -180,7 +182,7 @@ def retrieve_user_balance():
 def make_transfer():
     data = request.json
     bank = data.get('bank'),
-    
+
     user_data = {
         "bank_code": data.get('bank_code'),
         "account_number": data.get('account_number'),
