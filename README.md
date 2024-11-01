@@ -55,6 +55,6 @@ User Endpoints (/api/user)
 - **POST** /details: Retrieve user details.
 - **POST** /balance: Retrieve user balance.
 
-##Transfer Endpoints (/api/transfer)
+Transfer Endpoints (/api/transfer)
 - **POST** /make-transfer: Initiate a financial transfer.
   
