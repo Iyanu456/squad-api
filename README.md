@@ -1,28 +1,60 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask3&demo-title=Flask%203%20%2B%20Vercel&demo-description=Use%20Flask%203%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask3-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+# User Management and Financial Transactions API
 
-# Flask + Vercel
+This project is a Flask-based RESTful API for managing users and handling financial transactions, built on top of MongoDB and using MongoEngine as the ORM. The app includes functionalities to create, update, and verify user accounts, as well as to interact with financial endpoints for making transfers and querying balances.
 
-This example shows how to use Flask 3 on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
+## Table of Contents
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Project Structure](#project-structure)
+- [Technologies Used](#technologies-used)
 
-## Demo
+## Features
 
-https://flask-python-template.vercel.app/
+- **User Management**: Create, retrieve, update, and delete user accounts.
+- **Financial Transactions**: Integration with Squad API to facilitate payments, account lookups, and balance retrieval.
+- **Data Storage**: User data is stored in MongoDB with MongoEngine for schema modeling.
+- **Blueprint-based Routing**: Separate modules for `user` and `transfer` routes.
+- **Security**: Password hashing with bcrypt and unique user IDs for account verification.
 
-## How it Works
+## Installation
 
-This example uses the Web Server Gateway Interface (WSGI) with Flask to enable handling requests on Vercel with Serverless Functions.
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-username/your-repo-name.git
+   cd your-repo-name
 
-## Running Locally
+2. Set up a virtual environment:
+   ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+   
+3. Install dependencies:
+    ```bash
+    pip install -r requirements.txt
 
-```bash
-npm i -g vercel
-vercel dev
-```
+4. Configure environment variables (e.g., SECRET_KEY for Flask).
+   
+5. Start MongoDB and Flask server:
+     ````bash
+     mongod --dbpath /path/to/your/db
+     python app.py
 
-Your Flask application is now available at `http://localhost:3000`.
+## Usage
 
-## One-Click Deploy
+1. Start the Flask application:
+   ```bash
+   flask run
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+## API Endpoints
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask3&demo-title=Flask%203%20%2B%20Vercel&demo-description=Use%20Flask%203%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask3-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+User Endpoints (/api/user)
+- **POST** /create: Register a new user.
+- **POST** /verify: Verify user and create a virtual account.
+- **POST** /details: Retrieve user details.
+- **POST** /balance: Retrieve user balance.
+
+##Transfer Endpoints (/api/transfer)
+- **POST** /make-transfer: Initiate a financial transfer.
+  
