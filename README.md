@@ -1,4 +1,4 @@
-# User Management and Financial Transactions API
+# Financial Transactions API
 
 This project is a Flask-based RESTful API for managing users and handling financial transactions, built on top of MongoDB and using MongoEngine as the ORM. The app includes functionalities to create, update, and verify user accounts, as well as to interact with financial endpoints for making transfers and querying balances.
 
