@@ -52,8 +52,8 @@ This project is a Flask-based RESTful API for managing users and handling financ
 User Endpoints (/api/user)
 - **POST** /create: Register a new user.
 - **POST** /verify: Verify user and create a virtual account.
-- **POST** /details: Retrieve user details.
-- **POST** /balance: Retrieve user balance.
+- **GET** /details: Retrieve user details.
+- **GET** /balance: Retrieve user balance.
 
 Transfer Endpoints (/api/transfer)
 - **POST** /make-transfer: Initiate a financial transfer.
